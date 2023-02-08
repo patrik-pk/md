@@ -1,0 +1,35 @@
+@import './colors.scss';
+
+.nav {
+  display: flex;
+  justify-content: center;
+}
+
+.nav-link {
+  $br: 7px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100px;
+  height: 50px;
+  background-color: $lightGray;
+  color: white;
+  transition: 300ms all;
+
+  &:first-child {
+    border-radius: $br 0 0 $br;
+  }
+
+  &:last-child {
+    border-radius: 0px $br $br 0;
+  }
+
+  &.active {
+    background-color: $primary;
+    cursor: default;
+  }
+
+  &:hover {
+  }
+}

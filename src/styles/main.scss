@@ -1,0 +1,93 @@
+@import './colors.scss';
+
+.app {
+  position: relative;
+  width: 100vw;
+  min-height: 100vh;
+  overflow-x: hidden;
+  background: $darkGray;
+  padding: 30px 10vw;
+}
+
+.app-content {
+  width: 100%;
+  max-width: 300px;
+  margin: 0 auto;
+  margin-top: 50px;
+}
+
+.morse-select {
+  margin-top: 20px;
+
+  //   &,
+  //   div {
+  //     border-radius: 30px !important;
+  //   }
+
+  //   &,
+  //   div,
+  //   p {
+  //     border: none !important;
+  //     background: $lightGray !important;
+  //   }
+
+  //   &,
+  //   div,
+  //   p {
+  //     color: white !important;
+  //   }
+}
+
+.morse-select__control {
+  height: 40px !important;
+  background-color: $lightGray !important;
+  border-radius: 7px !important;
+  border: none !important;
+
+  &,
+  div {
+    color: white !important;
+  }
+}
+
+.morse-select__menu {
+  background-color: $lightGray !important;
+
+  &,
+  div {
+    color: white !important;
+  }
+}
+
+.morse-select__option {
+  &.active {
+    background-color: $primary !important;
+  }
+}
+
+.morse-output {
+}
+
+.morse-output-label,
+.morse-output-value,
+.morse-output-status {
+  color: white;
+}
+
+.morse-output-label {
+  margin-top: 20px;
+  margin-bottom: 5px;
+}
+
+.morse-output-value {
+  width: 100%;
+  padding: 10px 15px;
+  font-size: 16px;
+  background-color: $lightGray;
+  color: white;
+  border-radius: 7px;
+}
+
+.morse-output-status {
+  margin-top: 10px;
+}
