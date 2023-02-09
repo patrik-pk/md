@@ -8,53 +8,82 @@ import '../styles/rates.scss'
 const apiKey = 'XFszn09U4PGFro5WBtKMtbV0oRB40sUX'
 const BASE_URL = 'https://api.apilayer.com/exchangerates_data/latest'
 
+const myHeaders = new Headers()
+myHeaders.append('apikey', apiKey)
+
+type Option = {
+  value: string
+  label: string
+}
+
 const Rates = () => {
-  const [options, setOptions] = useState<string[]>([])
-  const [value1, setValue1] = useState(1)
-  const [value2, setValue2] = useState(0)
+  const [options, setOptions] = useState<Option[]>([])
+  const [fromCurrency, setFromCurrency] = useState<Option | null>(null)
+  const [toCurrency, setToCurrency] = useState<Option | null>(null)
+  const [exchangeRate, setExchangeRate] = useState(1)
+  const [amount, setAmount] = useState(1)
+  const [amountInFromCurrency, setAmountInFromCurrency] = useState(true)
+
+  let fromAmount, toAmount
+  if (amountInFromCurrency) {
+    fromAmount = amount
+    toAmount = amount * exchangeRate
+  } else {
+    toAmount = amount
+    fromAmount = amount / exchangeRate
+  }
+
+  const handleAmountChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    isAmountFrom: boolean
+  ) => {
+    setAmountInFromCurrency(isAmountFrom)
+    setAmount(Number(e.target.value))
+  }
 
   useEffect(() => {
-    const myHeaders = new Headers()
-    myHeaders.append('apikey', apiKey)
-
     const requestOptions = {
       method: 'GET',
-      redirect: 'follow',
       headers: myHeaders,
     }
 
-    let lsdata = localStorage.getItem('lsdata')
+    fetch(BASE_URL, requestOptions)
+      .then((response) => response.json())
+      .then((data) => {
+        const baseOption = { label: data.base, value: data.base }
+        const otherOptions = Object.keys(data.rates).map((key) => ({
+          label: key,
+          value: key,
+        }))
+        const toOption =
+          otherOptions.find((opt) => opt.value === 'CZK') || otherOptions[0]
 
-    if (lsdata) {
-      lsdata = JSON.parse(lsdata)
-      console.log('ls data', lsdata)
-      setOptions([
-        // @ts-ignore
-        { label: lsdata.base, value: lsdata.base },
-        // @ts-ignore
-        ...Object.keys(lsdata.rates).map((key) => ({ label: key, value: key })),
-      ])
-    } else {
-      // @ts-ignore
-      fetch(BASE_URL, requestOptions)
-        .then((response) => response.json())
-        .then((data) => {
-          localStorage.setItem('lsdata', JSON.stringify(data))
-          setOptions([
-            // @ts-ignore
-            { label: data.base, value: data.base },
-            // @ts-ignore
-            ...Object.keys(data.rates).map((key) => ({
-              label: key,
-              value: key,
-            })),
-          ])
-        })
-        .catch((error) => console.log('error', error))
-    }
+        setOptions([baseOption, ...otherOptions])
+        setFromCurrency(baseOption)
+        setToCurrency(toOption)
+        setExchangeRate(data.rates[toOption.value])
+      })
+      .catch((error) => console.log('fetch error', error))
   }, [])
 
-  console.log(options)
+  useEffect(() => {
+    if (fromCurrency && toCurrency) {
+      const requestOptions = {
+        method: 'GET',
+        headers: myHeaders,
+      }
+
+      fetch(
+        `${BASE_URL}?base=${fromCurrency.value}&symbols=${toCurrency.value}`,
+        requestOptions
+      )
+        .then((res) => res.json())
+        .then((data) => {
+          setExchangeRate(data.rates[toCurrency.value])
+        })
+        .catch((error) => console.log('fetch error', error))
+    }
+  }, [fromCurrency, toCurrency])
 
   return (
     <>
@@ -65,22 +94,17 @@ const Rates = () => {
               name='value1'
               type='number'
               step={1}
-              // label='Input'
-              value={value1}
+              value={fromAmount}
               handleChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                setValue1(Number(e.target.value))
+                handleAmountChange(e, true)
               }
             />
-
             <Select
               className='rates-select custom-select'
               classNamePrefix='custom-select'
               options={options}
-              // onChange={(opt) => handleSelectChange(opt)}
-              defaultValue={
-                options.find((opt: any) => opt.value === 'CZK') || options[1]
-              }
-              // isSearchable={true}
+              value={fromCurrency}
+              onChange={(opt) => setFromCurrency(opt)}
             />
           </div>
 
@@ -89,21 +113,17 @@ const Rates = () => {
               name='value2'
               type='number'
               step={1}
-              // label='Input'
-              value={value2}
+              value={toAmount}
               handleChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                setValue2(Number(e.target.value))
+                handleAmountChange(e, false)
               }
             />
-
             <Select
               className='rates-select custom-select'
               classNamePrefix='custom-select'
               options={options}
-              defaultValue={options[0]}
-              // onChange={(opt) => handleSelectChange(opt)}
-              // defaultValue={options[0] || null}
-              // isSearchable={true}
+              value={toCurrency}
+              onChange={(opt) => setToCurrency(opt)}
             />
           </div>
         </>

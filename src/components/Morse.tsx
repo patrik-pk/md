@@ -6,6 +6,13 @@ import { morseCode, morseCodeReversed } from '../data/morseCode'
 
 import '../styles/morse.scss'
 
+type ConvertType = 'morse-to-text' | 'text-to-morse'
+
+type Option = {
+  value: ConvertType
+  label: string
+}
+
 const Morse = () => {
   const [input, setInput] = useState('')
   const [output, setOutput] = useState('')
@@ -59,13 +66,6 @@ const Morse = () => {
       </div>
     </>
   )
-}
-
-type ConvertType = 'morse-to-text' | 'text-to-morse'
-
-type Option = {
-  value: ConvertType
-  label: string
 }
 
 const selectOptions: Option[] = [
