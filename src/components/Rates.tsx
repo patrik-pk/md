@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 
 import Select from 'react-select'
 import Input from './Input'
@@ -26,6 +26,7 @@ const Rates = () => {
   const [amountInFromCurrency, setAmountInFromCurrency] = useState(true)
   const [firstLoad, setFirstLoad] = useState(true)
   const [loading, setLoading] = useState(false)
+  const firstLoadRef = useRef(firstLoad)
 
   let fromAmount, toAmount
   if (amountInFromCurrency) {
@@ -43,6 +44,10 @@ const Rates = () => {
     setAmountInFromCurrency(isAmountFrom)
     setAmount(Number(e.target.value))
   }
+
+  useEffect(() => {
+    firstLoadRef.current = firstLoad
+  }, [firstLoad])
 
   useEffect(() => {
     const requestOptions = {
@@ -76,7 +81,7 @@ const Rates = () => {
   }, [])
 
   useEffect(() => {
-    if (fromCurrency && toCurrency && !firstLoad) {
+    if (fromCurrency && toCurrency && !firstLoadRef.current) {
       const requestOptions = {
         method: 'GET',
         headers: myHeaders,
@@ -97,7 +102,7 @@ const Rates = () => {
           setLoading(false)
           console.log('fetch error', error)
         })
-    } else if (fromCurrency && toCurrency && firstLoad) {
+    } else if (fromCurrency && toCurrency && firstLoadRef.current) {
       setFirstLoad(false)
     }
   }, [fromCurrency, toCurrency])
