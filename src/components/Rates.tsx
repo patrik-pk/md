@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 
 import Select from 'react-select'
 import Input from './Input'
+import Loading from './Loading'
 
 import '../styles/rates.scss'
 
@@ -23,6 +24,8 @@ const Rates = () => {
   const [exchangeRate, setExchangeRate] = useState(1)
   const [amount, setAmount] = useState(1)
   const [amountInFromCurrency, setAmountInFromCurrency] = useState(true)
+  const [firstLoad, setFirstLoad] = useState(true)
+  const [loading, setLoading] = useState(false)
 
   let fromAmount, toAmount
   if (amountInFromCurrency) {
@@ -47,6 +50,8 @@ const Rates = () => {
       headers: myHeaders,
     }
 
+    setLoading(true)
+
     fetch(BASE_URL, requestOptions)
       .then((response) => response.json())
       .then((data) => {
@@ -62,16 +67,22 @@ const Rates = () => {
         setFromCurrency(baseOption)
         setToCurrency(toOption)
         setExchangeRate(data.rates[toOption.value])
+        setLoading(false)
       })
-      .catch((error) => console.log('fetch error', error))
+      .catch((error) => {
+        setLoading(false)
+        console.log('fetch error', error)
+      })
   }, [])
 
   useEffect(() => {
-    if (fromCurrency && toCurrency) {
+    if (fromCurrency && toCurrency && !firstLoad) {
       const requestOptions = {
         method: 'GET',
         headers: myHeaders,
       }
+
+      setLoading(true)
 
       fetch(
         `${BASE_URL}?base=${fromCurrency.value}&symbols=${toCurrency.value}`,
@@ -80,13 +91,20 @@ const Rates = () => {
         .then((res) => res.json())
         .then((data) => {
           setExchangeRate(data.rates[toCurrency.value])
+          setLoading(false)
         })
-        .catch((error) => console.log('fetch error', error))
+        .catch((error) => {
+          setLoading(false)
+          console.log('fetch error', error)
+        })
+    } else if (fromCurrency && toCurrency && firstLoad) {
+      setFirstLoad(false)
     }
   }, [fromCurrency, toCurrency])
 
   return (
     <>
+      {loading && <Loading />}
       {options.length && (
         <>
           <div className='rates-value-wrapper'>

@@ -10,8 +10,10 @@
 }
 
 .app__content {
+  position: relative;
   width: 100%;
   max-width: 300px;
+  min-height: 100px;
   margin: 0 auto;
   margin-top: 50px;
 }
