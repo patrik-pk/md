@@ -7,7 +7,7 @@ type InputProps = {
   label?: string
   value: string | number
   handleChange: React.ChangeEventHandler<HTMLInputElement>
-}
+} & { [key: string]: any }
 
 const Input: FC<InputProps> = ({
   name,

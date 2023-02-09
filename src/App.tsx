@@ -7,13 +7,14 @@ import Rates from './components/Rates'
 
 import './styles/reset.scss'
 import './styles/main.scss'
+import './styles/select.scss'
 
 const App = () => {
   return (
     <div className='app'>
       <Navigation />
 
-      <main className='app-content'>
+      <main className='app__content'>
         <Routes>
           <Route path='/' element={<Morse />} />
           <Route path='/rates' element={<Rates />} />

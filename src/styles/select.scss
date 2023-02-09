@@ -1,0 +1,29 @@
+@import './colors.scss';
+
+.custom-select__control {
+  height: 40px !important;
+  background-color: $lightGray !important;
+  border-radius: 7px !important;
+  border: none !important;
+
+  &,
+  div {
+    color: white !important;
+  }
+}
+
+.custom-select__menu,
+.custom-select__menu-list {
+  background-color: $lightGray !important;
+
+  &,
+  div {
+    color: white !important;
+  }
+}
+
+.custom-select__option--is-focused {
+  &:not(.custom-select__option--is-selected) {
+    background-color: transparent !important;
+  }
+}

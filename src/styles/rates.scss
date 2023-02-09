@@ -1,0 +1,12 @@
+@import './colors.scss';
+
+.rates-value-wrapper {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  column-gap: 10px;
+  margin-bottom: 30px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
