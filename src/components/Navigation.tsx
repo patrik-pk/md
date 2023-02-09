@@ -9,13 +9,13 @@ const Navigation = () => {
   return (
     <nav className='nav'>
       <Link
-        className={`nav-link ${loc.pathname == '/' ? 'active' : ''}`}
+        className={`nav-link ${loc.pathname === '/' ? 'active' : ''}`}
         to='/'
       >
         Morse
       </Link>
       <Link
-        className={`nav-link ${loc.pathname == '/rates' ? 'active' : ''}`}
+        className={`nav-link ${loc.pathname === '/rates' ? 'active' : ''}`}
         to='/rates'
       >
         Rates

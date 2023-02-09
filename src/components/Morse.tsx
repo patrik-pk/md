@@ -90,7 +90,7 @@ const convert = (
   }
 
   // TODO: Also handle error when converting from text to morse
-  if (convertType == 'text-to-morse') {
+  if (convertType === 'text-to-morse') {
     setInputError(null)
   }
 
